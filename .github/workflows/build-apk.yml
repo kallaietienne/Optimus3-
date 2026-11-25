@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
@@ -36,6 +36,12 @@ jobs:
 
       - name: Android projekt létrehozása
         run: npx cap add android
+
+      - name: Engedélyek (névjegyek, kamera) az Android manifestbe
+        run: |
+          MF=android/app/src/main/AndroidManifest.xml
+          sed -i '/android.permission.INTERNET/a\    <uses-permission android:name="android.permission.READ_CONTACTS" />\n    <uses-permission android:name="android.permission.CAMERA" />' $MF
+          grep -n "uses-permission" $MF
 
       - name: Ikonok generálása
         run: npm run assets
@@ -74,3 +80,4 @@ jobs:
         with:
           name: Optimus3-APK
           path: Optimus3-*.apk
+          
